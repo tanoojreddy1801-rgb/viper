@@ -1,1 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>V.I.P.E.R</title>
 
+  <style>
+    :root {
+      --bg-1: #f8fbff;
+      --bg-2: #eef5ff;
+      --bg-3: #f9fcff;
+      --surface: rgba(255, 255, 255, 0.8);
+      --text: #24324a;
+      --text-soft: #60708d;
+      --line: rgba(186, 205, 232, 0.45);
+      --primary: #5b8def;
+      --primary-2: #7fb3ff;
+      --teal: #57c6c2;
+      --shadow-lg: 0 24px 60px rgba(115, 149, 199, 0.18);
+      --shadow-md: 0 14px 34px rgba(122, 152, 199, 0.14);
+      --shadow-sm: 0 8px 20px rgba(122, 152, 199, 0.1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(168, 202, 255, 0.26), transparent 28%),
+        radial-gradient(circle at 100% 10%, rgba(126, 215, 193, 0.22), transparent 24%),
+        radial-gradient(circle at 70% 100%, rgba(246, 183, 200, 0.18), transparent 24%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 52%, var(--bg-3) 100%);
+      overflow-x: hidden;
+    }
+
+    .app-shell { position: relative; z-index: 1; }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 26px;
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(201, 216, 238, 0.45);
+      box-shadow: 0 8px 24px rgba(141, 169, 207, 0.08);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 46px;
+      height: 60px;          /* better for rabbit */
+      object-fit: contain;
+    }
+    
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+   
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #3b67b7;
+      font-size: 15px;
+    }
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .logo {
+      font-size: 26px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, #4d7fe5, #61b7d5, #4d7fe5);
+      background-size: 200% auto;
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: shimmer 5s linear infinite;
+    }
+
+    .logo-sub {
+      color: var(--text-soft);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .nav-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(197, 214, 238, 0.5);
+      color: var(--text-soft);
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-btn {
+      height: 42px;
+      padding: 0 16px;
+      border: 1px solid rgba(192, 211, 236, 0.62);
+      border-radius: 14px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(242,247,255,0.92));
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 28px 22px 40px;
+    }
+
+    .panel {
+      position: relative;
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow-lg);
+      padding: 26px;
+      margin-bottom: 22px;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, rgba(91,141,239,0.85), rgba(87,198,194,0.75), rgba(246,183,200,0.7));
+      border-top-left-radius: 28px;   /* ✅ IMPORTANT */
+      border-top-right-radius: 28px;  /* ✅ IMPORTANT */
+    }
+
+    .hero-login {
+      max-width: 520px;
+      margin: 50px auto 0;
+      padding-top: 34px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .section-head-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    h1, h2 { margin: 0; }
+    h1 { font-size: 30px; font-weight: 800; }
+    h2 { font-size: 24px; font-weight: 800; }
+
+    .subtle {
+      color: var(--text-soft);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.88), rgba(246,250,255,0.75));
+      border: 1px solid rgba(197, 214, 238, 0.55);
+      color: #5f7396;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+      white-space: nowrap;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.5fr 0.8fr auto;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .search-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .toolbar-right {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    input, select, button { font: inherit; }
+
+    input, select {
+      width: 100%;
+      height: 48px;
+      border: 1px solid rgba(190, 208, 233, 0.62);
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,251,255,0.92));
+      border-radius: 16px;
+      padding: 0 14px;
+      color: var(--text);
+      outline: none;
+      transition: 0.22s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.78);
+    }
+
+    button {
+      height: 46px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+      box-shadow: var(--shadow-sm);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(122, 152, 199, 0.18);
+      filter: brightness(1.02);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, #5b8def, #78adff);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(242,247,255,0.92));
+      border: 1px solid rgba(192, 211, 236, 0.62);
+    }
+
+    .btn-export {
+      color: #fff;
+      background: linear-gradient(135deg, #8c7cf0, #ad8fff);
+    }
+
+    .btn-edit {
+      color: #fff;
+      background: linear-gradient(135deg, #46b8a4, #6ad3c0);
+    }
+
+    .btn-success {
+      color: #fff;
+      background: linear-gradient(135deg, #45ba88, #65d8a6);
+    }
+
+    .btn-danger {
+      color: #fff;
+      background: linear-gradient(135deg, #e58a95, #f2a6af);
+    }
+
+    .btn-view.active {
+      color: #fff;
+      background: linear-gradient(135deg, #5b8def, #7fb3ff);
+    }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .status-banner {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      display: none;
+      font-size: 13px;
+      font-weight: 700;
+      background: linear-gradient(135deg, rgba(126,215,193,0.18), rgba(91,141,239,0.12));
+      color: #2f6f77;
+      border: 1px solid rgba(126, 215, 193, 0.32);
+    }
+
+    .status-banner.editing { display: block; }
+
+    .status-message {
+      margin-top: 12px;
+      min-height: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-message.error { color: #c45d73; }
+    .status-message.success { color: #2f8d6a; }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .summary-card, .chart-card, .card, .pending-card, .list-table-wrap, .pane-list, .pane-detail, .empty-state {
+      background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,251,255,0.92));
+      border: 1px solid rgba(197, 214, 238, 0.55);
+      box-shadow: var(--shadow-md);
+    }
+
+    .summary-card {
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .summary-label {
+      color: var(--text-soft);
+      font-size: 13px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .summary-value {
+      font-size: 30px;
+      font-weight: 800;
+    }
+
+    .summary-note {
+      margin-top: 6px;
+      color: #8392aa;
+      font-size: 12px;
+    }
+
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .chart-card {
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .chart-label {
+      font-size: 14px;
+      color: var(--text-soft);
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .bar-track {
+      height: 18px;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(232,239,250,0.9), rgba(241,246,252,0.95));
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .bar-fill.pending { background: linear-gradient(90deg, #f6cc7a, #e8ad4d); }
+    .bar-fill.completed { background: linear-gradient(90deg, #70d1aa, #46b98b); }
+
+    .chart-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      color: var(--text-soft);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .pending-grid, .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .pending-card, .card {
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .pending-title, .client-name {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .client-pan, .pending-meta, .muted {
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .meta {
+      display: grid;
+      gap: 9px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: 108px 1fr;
+      gap: 8px;
+    }
+
+    .meta-label {
+      color: var(--text-soft);
+      font-weight: 700;
+    }
+
+    .stage-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .stage-client { background: #e9f2ff; color: #4674c7; }
+    .stage-partial { background: #fff3dc; color: #b27a14; }
+    .stage-full { background: #e8f8ef; color: #2e8b62; }
+    .stage-initiated { background: #f1ebff; color: #7d58c5; }
+    .stage-progress { background: #e7f8ff; color: #2c8bb1; }
+    .stage-approval { background: #fff0f3; color: #c06b87; }
+    .stage-adminwait { background: #fff4e2; color: #ba7c14; }
+    .stage-completed { background: #e7f9f1; color: #2f9970; }
+
+    .list-table-wrap {
+      overflow-x: auto;
+      border-radius: 24px;
+      margin-top: 16px;
+    }
+
+    .list-table {
+      width: 100%;
+      min-width: 1180px;
+      border-collapse: collapse;
+    }
+
+    .list-table th, .list-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(224, 234, 247, 0.9);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    .pane-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .pane-list, .pane-detail {
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .pane-item {
+      padding: 16px 18px;
+      border-bottom: 1px solid rgba(224, 234, 247, 0.9);
+      cursor: pointer;
+    }
+
+    .pane-item.active {
+      background: linear-gradient(135deg, rgba(91,141,239,0.1), rgba(87,198,194,0.1));
+      border-left: 4px solid var(--primary);
+      padding-left: 14px;
+    }
+
+    .pane-detail-inner { padding: 24px; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .detail-box {
+      background: linear-gradient(180deg, rgba(250,252,255,0.96), rgba(244,249,255,0.92));
+      border: 1px solid rgba(221, 232, 246, 0.92);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .detail-label {
+      color: var(--text-soft);
+      font-size: 11px;
+      margin-bottom: 6px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .empty-state {
+      padding: 34px 18px;
+      text-align: center;
+      border-radius: 24px;
+      font-weight: 600;
+      margin-top: 18px;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 1180px) {
+      .form-grid, .summary-grid, .filters-grid, .chart-grid { grid-template-columns: repeat(2, 1fr); }
+      .toolbar { grid-template-columns: 1fr; }
+      .search-wrap { grid-template-columns: 1fr; }
+      .toolbar-right { justify-content: flex-start; }
+      .pane-layout { grid-template-columns: 1fr; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 16px 14px 28px; }
+      .navbar { padding: 14px; }
+      .form-grid, .summary-grid, .filters-grid, .chart-grid { grid-template-columns: 1fr; }
+      .panel { padding: 18px; }
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="navbar">
+      <div class="brand">
+        <img src="https://raw.githubusercontent.com/invinciblescotax-rex/client-tracker-tool/main/whiper.jpg" class="brand-mark" />
+        <div class="brand-text">
+          <span class="logo">V.I.P.E.R</span>
+          <span class="logo-sub">Vault for Income, Profit & Equity Records</span>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div id="navRole" class="nav-pill hidden"></div>
+        <div id="navPending" class="nav-pill hidden"></div>
+        <button id="navLogout" class="nav-btn hidden" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="loginDiv" class="panel hero-login">
+        <div class="section-head">
+          <div class="section-head-left">
+            <h1>Hello Team. Greetings of the day!!!</h1>
+            <div class="subtle">Please enter your login details. You will be directed to your designated page.</div>
+          </div>
+          <div class="chip">Secure Login</div>
+        </div>
+
+        <input id="loginEmail" type="email" placeholder="Email" />
+        <br /><br />
+        <input id="loginPass" type="password" placeholder="Password" />
+        <br /><br />
+        <button id="loginBtn" class="btn-primary" onclick="login()">Login</button>
+        <div id="loginStatus" class="status-message"></div>
+      </div>
+
+      <div id="appDiv" class="hidden">
+        <div id="approvalPanel" class="panel hidden">
+          <div class="section-head">
+            <div class="section-head-left">
+              <h2>Pending Requests</h2>
+              <div class="subtle">Completion requests from users appear here for admin approval.</div>
+            </div>
+            <div class="chip" id="approvalChip">0 Pending</div>
+          </div>
+          <div id="pendingList"></div>
+        </div>
+
+        <div class="panel" id="entryPanel">
+          <div class="section-head">
+            <div class="section-head-left">
+              <h2>Client Entry</h2>
+              <div class="subtle">All fields are mandatory before saving a client.</div>
+            </div>
+            <div class="chip" id="workspaceChip">Workspace</div>
+          </div>
+
+          <div id="editBanner" class="status-banner"></div>
+
+          <div class="form-grid" style="margin-top:14px;">
+            <input id="name" placeholder="Name" required />
+            <input id="pb" placeholder="PB No" required />
+            <input id="pan" placeholder="PAN" required />
+            <input id="mobile" placeholder="Mobile" required />
+            <input id="email" placeholder="Email" required />
+
+            <select id="itr" onchange="setFee()" required>
+              <option value="">Select ITR</option>
+              <option value="ITR1">ITR-1</option>
+              <option value="ITR2">ITR-2/3/4</option>
+              <option value="CONSULT">Consultation</option>
+            </select>
+
+            <input id="fee" readonly placeholder="Fee" required />
+
+            <select id="payment" required>
+              <option value="">Select Payment Mode</option>
+              <option>Cash</option>
+              <option>UPI</option>
+              <option>Bank</option>
+            </select>
+
+            <select id="stage" required>
+              <option value="">Select Stage</option>
+              <option>Client registration at office</option>
+              <option>Partial submission by client</option>
+              <option>Full submission by client</option>
+              <option>Work initiated at office</option>
+              <option>In progress</option>
+              <option>For client approval</option>
+              <option>Completed</option>
+            </select>
+          </div>
+
+          <div class="action-row">
+            <button id="saveBtn" class="btn-primary" onclick="saveClient()">Save</button>
+            <button class="btn-secondary" onclick="resetForm()">Reset Form</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-head">
+            <div class="section-head-left">
+              <h2>Client Dashboard</h2>
+              <div class="subtle">Search, filter, export, review, edit, and update client progress across multiple views.</div>
+            </div>
+            <div class="chip" id="dashboardChip">Dashboard</div>
+          </div>
+
+          <div class="toolbar">
+            <div class="search-wrap">
+              <input id="search" placeholder="Search by name, PAN, mobile or email..." />
+              <button id="searchBtn" class="btn-primary" type="button">Search</button>
+            </div>
+
+            <select id="sortBy" onchange="applyFiltersAndRender()">
+              <option value="latest">Sort: Latest</option>
+              <option value="pending">Sort: Pending First</option>
+              <option value="completed">Sort: Completed First</option>
+              <option value="name">Sort: Name A-Z</option>
+            </select>
+
+            <div class="toolbar-right">
+              <button id="btnList" class="btn-secondary btn-view" onclick="setViewMode('list')">List View</button>
+              <button id="btnCard" class="btn-secondary btn-view active" onclick="setViewMode('card')">Card View</button>
+              <button id="btnPane" class="btn-secondary btn-view" onclick="setViewMode('pane')">Pane View</button>
+              <button class="btn-export" onclick="exportExcel()">Excel</button>
+              <button class="btn-export" onclick="exportPDF()">PDF</button>
+            </div>
+          </div>
+
+          <div class="filters-grid">
+            <input id="createdDateFilter" type="date" onchange="applyFiltersAndRender()" />
+            <input id="completedDateFilter" type="date" onchange="applyFiltersAndRender()" />
+            <select id="stageFilter" onchange="applyFiltersAndRender()">
+              <option value="">All Stages</option>
+              <option>Client registration at office</option>
+              <option>Partial submission by client</option>
+              <option>Full submission by client</option>
+              <option>Work initiated at office</option>
+              <option>In progress</option>
+              <option>For client approval</option>
+              <option>Waiting for admin approval</option>
+              <option>Completed</option>
+            </select>
+            <button class="btn-secondary" onclick="clearFilters()">Clear Filters</button>
+          </div>
+
+          <div class="summary-grid">
+            <div class="summary-card">
+              <div class="summary-label">Total Clients</div>
+              <div id="sumTotal" class="summary-value">0</div>
+              <div class="summary-note">Visible after current filters</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-label">Pending Clients</div>
+              <div id="sumPending" class="summary-value">0</div>
+              <div class="summary-note">Not yet completed</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-label">Completed Clients</div>
+              <div id="sumCompleted" class="summary-value">0</div>
+              <div class="summary-note">Marked as completed</div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-label">Completion Rate</div>
+              <div id="sumRate" class="summary-value">0%</div>
+              <div class="summary-note">Based on visible clients</div>
+            </div>
+          </div>
+
+          <div class="chart-grid">
+            <div class="chart-card">
+              <div class="chart-label">Pending Clients</div>
+              <div class="bar-track">
+                <div id="pendingBar" class="bar-fill pending" style="width:0%;"></div>
+              </div>
+              <div class="chart-meta">
+                <span id="pendingCount">0 clients</span>
+                <span id="pendingPercent">0%</span>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-label">Completed Clients</div>
+              <div class="bar-track">
+                <div id="completedBar" class="bar-fill completed" style="width:0%;"></div>
+              </div>
+              <div class="chart-meta">
+                <span id="completedCount">0 clients</span>
+                <span id="completedPercent">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    emailjs.init("oCSNm-4jMM9RJpB35");
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot, collection, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCsxAw40sFLw00PtEas3cvzRMEjkDZ9NJE",
+      authDomain: "client-tracker-tool-5bdf6.firebaseapp.com",
+      projectId: "client-tracker-tool-5bdf6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const loginDiv = document.getElementById("loginDiv");
+    const appDiv = document.getElementById("appDiv");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginStatus = document.getElementById("loginStatus");
+    const navRole = document.getElementById("navRole");
+    const navPending = document.getElementById("navPending");
+    const navLogout = document.getElementById("navLogout");
+    const approvalPanel = document.getElementById("approvalPanel");
+    const pendingList = document.getElementById("pendingList");
+    const approvalChip = document.getElementById("approvalChip");
+    const workspaceChip = document.getElementById("workspaceChip");
+    const dashboardChip = document.getElementById("dashboardChip");
+    const searchInput = document.getElementById("search");
+    const searchBtn = document.getElementById("searchBtn");
+
+    let currentUserEmail = "";
+    let currentRole = "";
+    let allClients = [];
+    let displayedClients = [];
+    let currentView = "card";
+    let selectedPanePan = null;
+    let editingPan = null;
+    let unsubscribeClients = null;
+
+    const editableStages = [
+      "Client registration at office",
+      "Partial submission by client",
+      "Full submission by client",
+      "Work initiated at office",
+      "In progress",
+      "For client approval",
+      "Completed"
+    ];
+
+    function setLoginStatus(message = "", type = "") {
+      loginStatus.textContent = message;
+      loginStatus.className = "status-message" + (type ? ` ${type}` : "");
+    }
+
+    function setLoginLoading(isLoading) {
+      loginBtn.disabled = isLoading;
+      loginBtn.textContent = isLoading ? "Signing In..." : "Login";
+    }
+
+    function getISTTime() {
+      return new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+    }
+
+    function getTodayISOFromIST() {
+      return new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).toISOString().slice(0, 10);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function getInputValue(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function setInputValue(id, value) {
+      document.getElementById(id).value = value || "";
+    }
+
+    function isAdmin() {
+      return currentRole === "admin";
+    }
+
+    function isCompleted(client) {
+      return (client.stage || "") === "Completed";
+    }
+
+    function getPendingRequests() {
+      return allClients.filter(c =>
+        c.completionRequested === true ||
+        c.approvalStatus === "pending" ||
+        c.stage === "Waiting for admin approval"
+      );
+    }
+
+    function getStageClass(stage) {
+      switch (stage) {
+        case "Client registration at office": return "stage-client";
+        case "Partial submission by client": return "stage-partial";
+        case "Full submission by client": return "stage-full";
+        case "Work initiated at office": return "stage-initiated";
+        case "In progress": return "stage-progress";
+        case "For client approval": return "stage-approval";
+        case "Waiting for admin approval": return "stage-adminwait";
+        case "Completed": return "stage-completed";
+        default: return "stage-client";
+      }
+    }
+
+    function stageBadge(stage) {
+      return `<span class="stage-badge ${getStageClass(stage)}">${escapeHtml(stage || "-")}</span>`;
+    }
+
+    function getDropdownStage(stage) {
+      return stage === "Waiting for admin approval" ? "Completed" : stage;
+    }
+
+    function stageOptions(selectedStage) {
+      return editableStages.map(stage =>
+        `<option value="${escapeHtml(stage)}" ${selectedStage === stage ? "selected" : ""}>${escapeHtml(stage)}</option>`
+      ).join("");
+    }
+
+    async function getRoleByEmail(email) {
+      const ref = doc(db, "roles", email.toLowerCase());
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return null;
+      return snap.data();
+    }
+
+    function updateViewButtons() {
+      document.getElementById("btnList").classList.toggle("active", currentView === "list");
+      document.getElementById("btnCard").classList.toggle("active", currentView === "card");
+      document.getElementById("btnPane").classList.toggle("active", currentView === "pane");
+    }
+
+    function setEditMode(client) {
+      editingPan = client?.pan || null;
+      const banner = document.getElementById("editBanner");
+      const saveBtn = document.getElementById("saveBtn");
+
+      if (editingPan) {
+        banner.classList.add("editing");
+        banner.textContent = `Editing client: ${client.name || "-"} (${client.pan || "-"})`;
+        saveBtn.textContent = "Update Client";
+      } else {
+        banner.classList.remove("editing");
+        banner.textContent = "";
+        saveBtn.textContent = "Save";
+      }
+    }
+
+    function resetFormFields() {
+      setInputValue("name", "");
+      setInputValue("pb", "");
+      setInputValue("pan", "");
+      setInputValue("mobile", "");
+      setInputValue("email", "");
+      setInputValue("itr", "");
+      setInputValue("fee", "");
+      setInputValue("payment", "");
+      setInputValue("stage", "");
+    }
+
+    function validateMandatoryFields() {
+      const name = getInputValue("name");
+      const pb = getInputValue("pb");
+      const pan = getInputValue("pan");
+      const mobile = getInputValue("mobile");
+      const email = getInputValue("email");
+      const itr = document.getElementById("itr").value;
+      const fee = document.getElementById("fee").value;
+      const payment = document.getElementById("payment").value;
+      const stage = document.getElementById("stage").value;
+
+      if (!name || !pb || !pan || !mobile || !email || !itr || !fee || !payment || !stage) {
+        alert("All fields are mandatory. Please fill every field before saving.");
+        return false;
+      }
+      return true;
+    }
+
+    function toISODateFromStored(value) {
+      if (!value) return "";
+      if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+      const match = String(value).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (!match) return "";
+      const day = match[1].padStart(2, "0");
+      const month = match[2].padStart(2, "0");
+      const year = match[3];
+      return `${year}-${month}-${day}`;
+    }
+
+    function updateSummary(data) {
+      const total = data.length;
+      const completed = data.filter(isCompleted).length;
+      const pending = total - completed;
+      const completedPercent = total ? Math.round((completed / total) * 100) : 0;
+      const pendingPercent = total ? 100 - completedPercent : 0;
+
+      document.getElementById("sumTotal").textContent = total;
+      document.getElementById("sumPending").textContent = pending;
+      document.getElementById("sumCompleted").textContent = completed;
+      document.getElementById("sumRate").textContent = completedPercent + "%";
+
+      document.getElementById("pendingBar").style.width = pendingPercent + "%";
+      document.getElementById("completedBar").style.width = completedPercent + "%";
+      document.getElementById("pendingCount").textContent = `${pending} clients`;
+      document.getElementById("completedCount").textContent = `${completed} clients`;
+      document.getElementById("pendingPercent").textContent = `${pendingPercent}%`;
+      document.getElementById("completedPercent").textContent = `${completedPercent}%`;
+    }
+
+    function applySort(data) {
+      const sortBy = document.getElementById("sortBy").value;
+      const sorted = [...data];
+
+      if (sortBy === "name") {
+        sorted.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      } else if (sortBy === "completed") {
+        sorted.sort((a, b) => Number(isCompleted(b)) - Number(isCompleted(a)));
+      } else if (sortBy === "pending") {
+        sorted.sort((a, b) => Number(isCompleted(a)) - Number(isCompleted(b)));
+      } else {
+        sorted.sort((a, b) => {
+          const aDate = a.createdAtISO || toISODateFromStored(a.createdAt) || "";
+          const bDate = b.createdAtISO || toISODateFromStored(b.createdAt) || "";
+          return bDate.localeCompare(aDate);
+        });
+      }
+
+      return sorted;
+    }
+
+    function renderPendingRequests() {
+      if (!isAdmin()) {
+        approvalPanel.classList.add("hidden");
+        return;
+      }
+
+      approvalPanel.classList.remove("hidden");
+      const pending = getPendingRequests();
+      approvalChip.textContent = `${pending.length} Pending`;
+
+      if (!pending.length) {
+        pendingList.innerHTML = `<div class="empty-state">No completion approvals are pending right now.</div>`;
+        return;
+      }
+
+      pendingList.innerHTML = `
+        <div class="pending-grid">
+          ${pending.map(c => `
+            <div class="pending-card">
+              <div class="pending-title">${escapeHtml(c.name || "-")}</div>
+              <div>${stageBadge(c.stage)}</div>
+              <div class="pending-meta">
+                PAN: ${escapeHtml(c.pan || "-")}<br>
+                Requested By: ${escapeHtml(c.completionRequestedBy || "-")}<br>
+                Requested At: ${escapeHtml(c.completionRequestedAt || "-")}<br>
+                Previous Stage: ${escapeHtml(c.previousStageBeforeApproval || "-")}
+              </div>
+              <div class="action-row">
+                <button class="btn-success" onclick="approveCompletion('${escapeHtml(c.pan)}')">Approve</button>
+                <button class="btn-danger" onclick="rejectCompletion('${escapeHtml(c.pan)}')">Reject</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderCardView(data) {
+      document.getElementById("list").innerHTML = `
+        <div class="cards-grid">
+          ${data.map(c => `
+            <div class="card">
+              <div class="card-top">
+                <div>
+                  <div class="client-name">${escapeHtml(c.name || "-")}</div>
+                  <div class="client-pan">${escapeHtml(c.pan || "-")}</div>
+                </div>
+                <div>${stageBadge(c.stage)}</div>
+              </div>
+
+              <div class="meta">
+                <div class="meta-row"><div class="meta-label">PAN</div><div>${escapeHtml(c.pan || "-")}</div></div>
+                <div class="meta-row"><div class="meta-label">PB No</div><div>${escapeHtml(c.pb || "-")}</div></div>
+                <div class="meta-row"><div class="meta-label">Mobile</div><div>${escapeHtml(c.mobile || "-")}</div></div>
+                <div class="meta-row"><div class="meta-label">Email</div><div>${escapeHtml(c.email || "-")}</div></div>
+                <div class="meta-row"><div class="meta-label">ITR</div><div>${escapeHtml(c.itr || "-")}</div></div>
+                <div class="meta-row"><div class="meta-label">Fee</div><div>₹${escapeHtml(c.fee || 0)}</div></div>
+                <div class="meta-row"><div class="meta-label">Payment</div><div>${escapeHtml(c.payment || "-")}</div></div>
+                <div class="meta-row"><div class="meta-label">Created</div><div>${escapeHtml(c.createdAt || "-")}</div></div>
+                <div class="meta-row"><div class="meta-label">Completed</div><div>${escapeHtml(c.completedAt || "-")}</div></div>
+              </div>
+
+              <div class="action-row">
+                <select id="stage_${escapeHtml(c.pan)}">
+                  ${stageOptions(getDropdownStage(c.stage))}
+                </select>
+                <button class="btn-primary" onclick="updateStage('${escapeHtml(c.pan)}')">Update Stage</button>
+                <button class="btn-edit" onclick="editClient('${escapeHtml(c.pan)}')">Edit Client</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderListView(data) {
+      document.getElementById("list").innerHTML = `
+        <div class="list-table-wrap">
+          <table class="list-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>PAN</th>
+                <th>Mobile</th>
+                <th>Email</th>
+                <th>ITR</th>
+                <th>Fee</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Completed</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${data.map(c => `
+                <tr>
+                  <td>${escapeHtml(c.name || "-")}</td>
+                  <td>${escapeHtml(c.pan || "-")}</td>
+                  <td>${escapeHtml(c.mobile || "-")}</td>
+                  <td>${escapeHtml(c.email || "-")}</td>
+                  <td>${escapeHtml(c.itr || "-")}</td>
+                  <td>₹${escapeHtml(c.fee || 0)}</td>
+                  <td>${stageBadge(c.stage)}</td>
+                  <td>${escapeHtml(c.createdAt || "-")}</td>
+                  <td>${escapeHtml(c.completedAt || "-")}</td>
+                  <td>
+                    <div class="action-row">
+                      <select id="stage_${escapeHtml(c.pan)}">
+                        ${stageOptions(getDropdownStage(c.stage))}
+                      </select>
+                      <button class="btn-primary" onclick="updateStage('${escapeHtml(c.pan)}')">Update</button>
+                      <button class="btn-edit" onclick="editClient('${escapeHtml(c.pan)}')">Edit</button>
+                    </div>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderPaneView(data) {
+      const selectedClient = data.find(c => c.pan === selectedPanePan) || data[0];
+      selectedPanePan = selectedClient.pan;
+
+      document.getElementById("list").innerHTML = `
+        <div class="pane-layout">
+          <div class="pane-list">
+            ${data.map(c => `
+              <div class="pane-item ${c.pan === selectedPanePan ? "active" : ""}" onclick="selectPaneClient('${escapeHtml(c.pan)}')">
+                <div><strong>${escapeHtml(c.name || "-")}</strong></div>
+                <div class="muted">${escapeHtml(c.pan || "-")}</div>
+                <div style="margin-top:8px;">${stageBadge(c.stage)}</div>
+              </div>
+            `).join("")}
+          </div>
+
+          <div class="pane-detail">
+            <div class="pane-detail-inner">
+              <h2 style="font-size:28px; margin-bottom:12px;">${escapeHtml(selectedClient.name || "-")}</h2>
+              <div>${stageBadge(selectedClient.stage)}</div>
+
+              <div class="detail-grid">
+                <div class="detail-box"><div class="detail-label">PAN</div><div>${escapeHtml(selectedClient.pan || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">PB No</div><div>${escapeHtml(selectedClient.pb || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">Mobile</div><div>${escapeHtml(selectedClient.mobile || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">Email</div><div>${escapeHtml(selectedClient.email || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">ITR Type</div><div>${escapeHtml(selectedClient.itr || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">Fee</div><div>₹${escapeHtml(selectedClient.fee || 0)}</div></div>
+                <div class="detail-box"><div class="detail-label">Payment</div><div>${escapeHtml(selectedClient.payment || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">Created By</div><div>${escapeHtml(selectedClient.createdBy || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">Created At</div><div>${escapeHtml(selectedClient.createdAt || "-")}</div></div>
+                <div class="detail-box"><div class="detail-label">Completed At</div><div>${escapeHtml(selectedClient.completedAt || "-")}</div></div>
+              </div>
+
+              <div class="action-row">
+                <select id="stage_${escapeHtml(selectedClient.pan)}">
+                  ${stageOptions(getDropdownStage(selectedClient.stage))}
+                </select>
+                <button class="btn-primary" onclick="updateStage('${escapeHtml(selectedClient.pan)}')">Update Stage</button>
+                <button class="btn-edit" onclick="editClient('${escapeHtml(selectedClient.pan)}')">Edit Client</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderClients(data) {
+      if (!data.length) {
+        document.getElementById("list").innerHTML = `<div class="empty-state">No client records found for the current search or filters.</div>`;
+        return;
+      }
+      if (currentView === "list") renderListView(data);
+      else if (currentView === "pane") renderPaneView(data);
+      else renderCardView(data);
+    }
+
+    function fillForm(client) {
+      setInputValue("name", client.name);
+      setInputValue("pb", client.pb);
+      setInputValue("pan", client.pan);
+      setInputValue("mobile", client.mobile);
+      setInputValue("email", client.email);
+      setInputValue("itr", client.itr);
+      setInputValue("fee", client.fee);
+      setInputValue("payment", client.payment || "");
+      setInputValue("stage", getDropdownStage(client.stage || ""));
+    }
+
+    function applyFiltersAndRender() {
+      const q = searchInput.value.toLowerCase().trim();
+      const createdDateFilter = document.getElementById("createdDateFilter").value;
+      const completedDateFilter = document.getElementById("completedDateFilter").value;
+      const stageFilter = document.getElementById("stageFilter").value;
+
+      let data = allClients.filter(c => {
+        const matchesSearch =
+          (c.name || "").toLowerCase().includes(q) ||
+          (c.pan || "").toLowerCase().includes(q) ||
+          (c.mobile || "").toLowerCase().includes(q) ||
+          (c.email || "").toLowerCase().includes(q);
+
+        const createdISO = c.createdAtISO || toISODateFromStored(c.createdAt);
+        const completedISO = c.completedAtISO || toISODateFromStored(c.completedAt);
+
+        const matchesCreatedDate = !createdDateFilter || createdISO === createdDateFilter;
+        const matchesCompletedDate = !completedDateFilter || completedISO === completedDateFilter;
+        const matchesStage = !stageFilter || (c.stage || "") === stageFilter;
+
+        return matchesSearch && matchesCreatedDate && matchesCompletedDate && matchesStage;
+      });
+
+      data = applySort(data);
+      displayedClients = data;
+
+      if (!data.length) selectedPanePan = null;
+      else if (!data.some(c => c.pan === selectedPanePan)) selectedPanePan = data[0].pan;
+
+      updateSummary(data);
+      renderClients(data);
+      renderPendingRequests();
+      updatePendingNav();
+    }
+
+    function updatePendingNav() {
+      if (!isAdmin()) {
+        navPending.classList.add("hidden");
+        return;
+      }
+      const count = getPendingRequests().length;
+      navPending.textContent = `Pending Requests: ${count}`;
+      navPending.classList.remove("hidden");
+    }
+
+    function loadClients() {
+      if (unsubscribeClients) unsubscribeClients();
+      unsubscribeClients = onSnapshot(collection(db, "clients"), snapshot => {
+        allClients = [];
+        snapshot.forEach(d => allClients.push(d.data()));
+        applyFiltersAndRender();
+      });
+    }
+
+    function buildCompletionRequest(existingData = {}, fallbackPreviousStage = "For client approval") {
+      return {
+        stage: "Waiting for admin approval",
+        completionRequested: true,
+        completionRequestedBy: currentUserEmail,
+        completionRequestedAt: getISTTime(),
+        approvalStatus: "pending",
+        approvedBy: "",
+        approvedAt: "",
+        completedAt: "",
+        completedAtISO: "",
+        previousStageBeforeApproval:
+          existingData.stage &&
+          existingData.stage !== "Waiting for admin approval" &&
+          existingData.stage !== "Completed"
+            ? existingData.stage
+            : (existingData.previousStageBeforeApproval || fallbackPreviousStage)
+      };
+    }
+
+    window.login = async () => {
+      const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+      const password = document.getElementById("loginPass").value;
+
+      if (!email || !password) {
+        setLoginStatus("Please enter both email and password.", "error");
+        return;
+      }
+
+      try {
+        setLoginLoading(true);
+        setLoginStatus("Checking your access...", "success");
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error) {
+        setLoginStatus(error.message || "Login failed.", "error");
+        setLoginLoading(false);
+      }
+    };
+
+    window.logout = async () => {
+      if (unsubscribeClients) {
+        unsubscribeClients();
+        unsubscribeClients = null;
+      }
+      await signOut(auth);
+    };
+
+    window.setFee = () => {
+      const itr = document.getElementById("itr").value;
+      const feeField = document.getElementById("fee");
+      if (itr === "ITR1") feeField.value = 849;
+      else if (itr === "ITR2") feeField.value = 1349;
+      else if (itr === "CONSULT") feeField.value = 199;
+      else feeField.value = "";
+    };
+
+    window.resetForm = () => {
+      resetFormFields();
+      setEditMode(null);
+    };
+
+    window.editClient = (pan) => {
+      const client = allClients.find(c => c.pan === pan);
+      if (!client) return;
+      fillForm(client);
+      setEditMode(client);
+      document.getElementById("entryPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    window.saveClient = async () => {
+      if (!validateMandatoryFields()) return;
+
+      const name = getInputValue("name");
+      const pb = getInputValue("pb");
+      const pan = getInputValue("pan").toUpperCase();
+      const mobile = getInputValue("mobile");
+      const email = getInputValue("email");
+      const itr = document.getElementById("itr").value;
+      const fee = document.getElementById("fee").value;
+      const payment = document.getElementById("payment").value;
+      let stage = document.getElementById("stage").value;
+
+      const ref = doc(db, "clients", pan);
+      const snap = await getDoc(ref);
+      const exists = snap.exists();
+      const existingData = snap.data() || {};
+
+      if (exists && editingPan !== pan) {
+        const proceed = confirm("This PAN already exists. Saving now will update the existing client record. Do you want to continue?");
+        if (!proceed) return;
+      }
+
+      const data = {
+        name,
+        pb,
+        pan,
+        mobile,
+        email,
+        itr,
+        fee: Number(fee),
+        payment,
+        stage,
+        createdBy: existingData.createdBy || currentUserEmail,
+        createdAt: existingData.createdAt || getISTTime(),
+        createdAtISO: existingData.createdAtISO || getTodayISOFromIST(),
+        completionRequested: existingData.completionRequested || false,
+        completionRequestedBy: existingData.completionRequestedBy || "",
+        completionRequestedAt: existingData.completionRequestedAt || "",
+        approvalStatus: existingData.approvalStatus || "",
+        approvedBy: existingData.approvedBy || "",
+        approvedAt: existingData.approvedAt || "",
+        previousStageBeforeApproval: existingData.previousStageBeforeApproval || "",
+        completedAt: existingData.completedAt || "",
+        completedAtISO: existingData.completedAtISO || ""
+      };
+
+      if (isAdmin()) {
+        if (stage === "Completed") {
+          data.stage = "Completed";
+          data.completionRequested = false;
+          data.completionRequestedBy = "";
+          data.completionRequestedAt = "";
+          data.approvalStatus = "approved";
+          data.approvedBy = currentUserEmail;
+          data.approvedAt = getISTTime();
+          data.completedAt = existingData.completedAt || getISTTime();
+          data.completedAtISO = existingData.completedAtISO || getTodayISOFromIST();
+          data.previousStageBeforeApproval = "";
+        }
+      } else {
+        if (stage === "Completed") {
+          Object.assign(data, buildCompletionRequest(existingData, "For client approval"));
+          alert("Sent for admin approval. Check back after a while.");
+        }
+      }
+
+      await setDoc(ref, data, { merge: true });
+
+      if (!exists && data.stage === "Client registration at office") {
+        emailjs.send("service_ns9w7qv", "template_87k6k2w", { name, pan, mobile, itr, fee });
+      }
+
+      alert(exists ? "Client updated successfully" : "Client saved successfully");
+      resetForm();
+    };
+
+    window.updateStage = async (pan) => {
+      const stageSelect = document.getElementById("stage_" + pan);
+      if (!stageSelect) return;
+
+      const requestedStage = stageSelect.value;
+      const client = allClients.find(c => c.pan === pan) || {};
+      const updateData = {};
+
+      if (isAdmin()) {
+        if (requestedStage === "Completed") {
+          updateData.stage = "Completed";
+          updateData.completionRequested = false;
+          updateData.completionRequestedBy = "";
+          updateData.completionRequestedAt = "";
+          updateData.approvalStatus = "approved";
+          updateData.approvedBy = currentUserEmail;
+          updateData.approvedAt = getISTTime();
+          updateData.completedAt = client.completedAt || getISTTime();
+          updateData.completedAtISO = client.completedAtISO || getTodayISOFromIST();
+          updateData.previousStageBeforeApproval = "";
+        } else {
+          updateData.stage = requestedStage;
+        }
+        await setDoc(doc(db, "clients", pan), updateData, { merge: true });
+        alert("Stage updated successfully");
+        return;
+      }
+
+      if (requestedStage === "Completed") {
+        Object.assign(updateData, buildCompletionRequest(client, client.stage || "For client approval"));
+        await setDoc(doc(db, "clients", pan), updateData, { merge: true });
+        alert("Sent for admin approval. Check back after a while.");
+        return;
+      }
+
+      updateData.stage = requestedStage;
+      await setDoc(doc(db, "clients", pan), updateData, { merge: true });
+      alert("Stage updated successfully");
+    };
+
+    window.approveCompletion = async (pan) => {
+      const client = allClients.find(c => c.pan === pan);
+      if (!client) return;
+
+      await setDoc(doc(db, "clients", pan), {
+        stage: "Completed",
+        completionRequested: false,
+        completionRequestedBy: "",
+        completionRequestedAt: "",
+        approvalStatus: "approved",
+        approvedBy: currentUserEmail,
+        approvedAt: getISTTime(),
+        completedAt: client.completedAt || getISTTime(),
+        completedAtISO: client.completedAtISO || getTodayISOFromIST(),
+        previousStageBeforeApproval: ""
+      }, { merge: true });
+
+      alert("Completion approved successfully");
+    };
+
+    window.rejectCompletion = async (pan) => {
+      const client = allClients.find(c => c.pan === pan);
+      if (!client) return;
+
+      await setDoc(doc(db, "clients", pan), {
+        stage: client.previousStageBeforeApproval || "In progress",
+        completionRequested: false,
+        completionRequestedBy: "",
+        completionRequestedAt: "",
+        approvalStatus: "rejected",
+        approvedBy: currentUserEmail,
+        approvedAt: getISTTime(),
+        completedAt: "",
+        completedAtISO: "",
+        previousStageBeforeApproval: ""
+      }, { merge: true });
+
+      alert("Completion request rejected");
+    };
+
+    window.setViewMode = (mode) => {
+      currentView = mode;
+      updateViewButtons();
+      renderClients(displayedClients);
+    };
+
+    window.selectPaneClient = (pan) => {
+      selectedPanePan = pan;
+      renderClients(displayedClients);
+    };
+
+    window.clearFilters = () => {
+      searchInput.value = "";
+      document.getElementById("createdDateFilter").value = "";
+      document.getElementById("completedDateFilter").value = "";
+      document.getElementById("stageFilter").value = "";
+      document.getElementById("sortBy").value = "latest";
+      applyFiltersAndRender();
+    };
+
+    window.applyFiltersAndRender = applyFiltersAndRender;
+
+    window.exportExcel = () => {
+      const formatted = displayedClients.map((c, i) => ({
+        "Sl. No.": i + 1,
+        "Name": c.name,
+        "PB No.": c.pb,
+        "PAN": c.pan,
+        "Mobile Number": c.mobile,
+        "Mail Address": c.email,
+        "Type of ITR": c.itr,
+        "Fees": c.fee,
+        "Status": c.stage,
+        "Created By": c.createdBy,
+        "Created At": c.createdAt,
+        "Completed At": c.completedAt
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(formatted);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Client Report");
+      XLSX.writeFile(wb, "Client_Report.xlsx");
+    };
+
+    window.exportPDF = () => {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("landscape");
+
+      const headers = [[
+        "Sl.No", "Name", "PB", "PAN", "Mobile", "Email",
+        "ITR", "Fees", "Status", "Created By", "Created", "Completed"
+      ]];
+
+      const rows = displayedClients.map((c, i) => [
+        i + 1, c.name || "", c.pb || "", c.pan || "", c.mobile || "",
+        c.email || "", c.itr || "", c.fee || "", c.stage || "",
+        c.createdBy || "", c.createdAt || "", c.completedAt || ""
+      ]);
+
+      pdf.autoTable({ head: headers, body: rows });
+      pdf.save("Client_Report.pdf");
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      try {
+        if (!user) {
+          currentUserEmail = "";
+          currentRole = "";
+          allClients = [];
+          displayedClients = [];
+          setEditMode(null);
+          if (unsubscribeClients) unsubscribeClients();
+          unsubscribeClients = null;
+
+          loginDiv.classList.remove("hidden");
+          appDiv.classList.add("hidden");
+          navRole.classList.add("hidden");
+          navPending.classList.add("hidden");
+          navLogout.classList.add("hidden");
+          approvalPanel.classList.add("hidden");
+          setLoginLoading(false);
+          return;
+        }
+
+        currentUserEmail = user.email.toLowerCase();
+        const roleData = await getRoleByEmail(currentUserEmail);
+
+        if (!roleData) {
+          setLoginStatus("Role record not found in Firestore.", "error");
+          await signOut(auth);
+          return;
+        }
+
+        if (roleData.active !== true) {
+          setLoginStatus("This account is inactive.", "error");
+          await signOut(auth);
+          return;
+        }
+
+        currentRole = String(roleData.role || "").toLowerCase();
+
+        if (currentRole !== "admin" && currentRole !== "user") {
+          setLoginStatus("Invalid role configured.", "error");
+          await signOut(auth);
+          return;
+        }
+
+        navRole.textContent = currentRole === "admin" ? "Admin Workspace" : "User Workspace";
+        navRole.classList.remove("hidden");
+        navLogout.classList.remove("hidden");
+
+        if (currentRole === "admin") {
+          workspaceChip.textContent = "Admin Workspace";
+          dashboardChip.textContent = "Admin Dashboard";
+          navPending.classList.remove("hidden");
+        } else {
+          workspaceChip.textContent = "User Workspace";
+          dashboardChip.textContent = "User Dashboard";
+          navPending.classList.add("hidden");
+        }
+
+        loginDiv.classList.add("hidden");
+        appDiv.classList.remove("hidden");
+        updateViewButtons();
+        loadClients();
+        setLoginLoading(false);
+        setLoginStatus("");
+      } catch (error) {
+        setLoginStatus(error.message || "Login flow failed.", "error");
+        setLoginLoading(false);
+      }
+    });
+
+    ["loginEmail", "loginPass"].forEach((id) => {
+      document.getElementById(id).addEventListener("keydown", (e) => {
+        if (e.key === "Enter") login();
+      });
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") applyFiltersAndRender();
+    });
+
+    searchBtn.addEventListener("click", applyFiltersAndRender);
+  </script>
+</body>
+</html>
